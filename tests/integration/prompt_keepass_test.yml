@@ -13,4 +13,4 @@
 
     - name: Print variables from my vars plugin
       debug:
-        var: local_testing
+        var: test_var

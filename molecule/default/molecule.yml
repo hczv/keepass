@@ -12,6 +12,9 @@ provisioner:
     converge: ../../tests/integration/prompt_keepass_test.yml
   config_options:
     defaults:
-      vars_plugins: /workspaces/ansible-keepass/collections/ansible_collections/hczv/keepass/plugins/vars
+      vars_plugins: ${MOLECULE_PROJECT_DIRECTORY}/plugins/vars
+  env:
+    ANSIBLE_VERBOSITY: 2
+    MOLECULE_SCENARIO: True
 verifier:
   name: ansible

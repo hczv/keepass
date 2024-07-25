@@ -7,6 +7,7 @@ from tkinter.ttk import *
 from ansible.utils.display import Display
 import tkinter as tk
 from tkinter import simpledialog
+import os
 
 DOCUMENTATION = '''
     vars: keepass_psw
@@ -89,6 +90,9 @@ class VarsModule(BaseVarsPlugin):
         self._cache[key] = value
 
     def _generate_data(self):
+        if os.getenv('MOLECULE_SCENARIO'):
+            return { 'keepass_psw': 'MOLECULE_SCENARIO' }
+
         data = {
             'keepass_psw': ask_password()
         }
