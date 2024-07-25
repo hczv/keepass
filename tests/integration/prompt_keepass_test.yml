@@ -2,6 +2,8 @@
 - name: Test my vars plugin
   hosts: localhost
   gather_facts: false
+  vars_files:
+    - ../vars/test_vars.yml
   tasks:
     - name: Print variables from my vars plugin
       debug:
