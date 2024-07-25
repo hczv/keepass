@@ -3,8 +3,8 @@ name: keepass
 version: 1.0.0
 readme: README.md
 authors:
-- Filip Winthereig <hczv@hotmail.dk>
-description: "Allows for keepass lookups based on custom fields in keepass kdbx file"
+    - Filip Winthereig <hczv@hotmail.dk>
+description: 'Allows for keepass lookups based on custom fields in keepass kdbx file'
 license_file: 'LICENSE'
 tags: [hczv, keepass, module, plugin]
 dependencies: {}
@@ -13,7 +13,9 @@ documentation: https://github.com/hczv/ansible-keepass/tree/main/docs
 homepage: https://github.com/hczv/ansible-keepass
 issues: https://github.com/hczv/ansible-keepass/issues
 build_ignore: [
-  '.devcontainer',
-  '.*',
-  'requirements.*'
+    'ansible.cfg',
+    'collections',
+    '.devcontainer',
+    '.*',
+    'requirements.*'
 ]

@@ -163,6 +163,8 @@ Thumbs.db
 logs
 .vscode
 
+collections
+
 # User config
 .devcontainer/userconfig/*
 !.devcontainer/userconfig/.bashrc.example

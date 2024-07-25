@@ -1,14 +1,17 @@
+dependency:
+  name: galaxy
 scenario:
   name: default
 driver:
-  name: docker
+  name: default
 platforms:
   - name: instance
-    image: "geerlingguy/docker-ubuntu1804-ansible:latest"
-    pre_build_image: true
 provisioner:
   name: ansible
   playbooks:
-    converge: ../../tests/integration/targets/my_vars_test/tasks/main.yml
+    converge: ../../tests/integration/prompt_keepass_test.yml
+  config_options:
+    defaults:
+      vars_plugins: /workspaces/ansible-keepass/collections/ansible_collections/hczv/keepass/plugins/vars
 verifier:
   name: ansible

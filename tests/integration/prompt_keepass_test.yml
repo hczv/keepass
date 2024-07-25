@@ -1,0 +1,16 @@
+# tests/integration/test_vars_plugin.yml
+- name: Test my vars plugin
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Print variables from my vars plugin
+      debug:
+        var: keepass_psw
+
+    - name: Print variables from my vars plugin
+      debug:
+        var: my_custom_var
+
+    - name: Print variables from my vars plugin
+      debug:
+        var: local_testing

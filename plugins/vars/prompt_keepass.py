@@ -58,7 +58,7 @@ def ask_password():
 display = Display()
 
 class VarsModule(BaseVarsPlugin):
-    _cache = None
+    _cache = {}
 
     REQUIRES_ENABLED = False
 
@@ -67,16 +67,26 @@ class VarsModule(BaseVarsPlugin):
     """
 
     def get_vars(self, loader, path, entities, cache=True):
+        cache_key = 'cached_var'
 
-        if self._cache is not None:
-            display.debug('Returning cached keepass master_password')
-            return self._cache
+        cached_data = self._get_cached_data(cache_key)
+
+        if cached_data is not None:
+            display.debug('Using cached master_password')
+            return cached_data
 
         display.v("Requesting master password")
         data = self._generate_data()
 
-        self._cache = data
+        self._set_cached_data(cache_key, data)
+
         return data
+
+    def _get_cached_data(self, key):
+        return self._cache.get(key)
+
+    def _set_cached_data(self, key, value):
+        self._cache[key] = value
 
     def _generate_data(self):
         data = {
