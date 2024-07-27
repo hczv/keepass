@@ -2,8 +2,6 @@
     "name": "Ansible Container",
     "dockerFile": "Dockerfile",
     "mounts": [
-        //"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
-        //"source=/mnt/c/Users/<user>/<path>/keepass.kdbx,target=/keepass.kdbx,type=bind",
         "source=${localWorkspaceFolder}/.devcontainer/userconfig,target=/userconfig,type=bind"
     ],
     "remoteUser": "vscode",

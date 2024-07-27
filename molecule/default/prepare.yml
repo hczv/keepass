@@ -1,0 +1,5 @@
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: "link docker.sock to /var/run"
+      raw: ln -s /tmp/docker.sock /var/run/docker.sock

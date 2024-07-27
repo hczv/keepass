@@ -1,0 +1,7 @@
+- name: Converge
+  hosts: all
+  tasks:
+    #- name: Test my module
+    #  hczv.keepass.lookup:
+    #    param1: 3
+    #    param2: 2
