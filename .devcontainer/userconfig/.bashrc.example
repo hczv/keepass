@@ -1,3 +1,11 @@
+is_docker_running() {
+  docker info > /dev/null 2>&1
+}
+
+# Check if Docker is already running
+if ! is_docker_running; then
+  sudo su -c "dockerd > /var/log/dockerd.log 2>&1 &"
+fi
 
 # Aliases
 alias ls="ls --color=auto"
