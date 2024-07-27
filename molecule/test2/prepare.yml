@@ -5,16 +5,14 @@
   become: true
   tasks:
 
-    - name: Install Python3.11
-      ansible.builtin.apt:
-        name: python3.11
-        state: present
+    #- name: Install Python3.11
+    #  ansible.builtin.apt:
+    #    name: python3.11
+    #    state: present
 
     - name: Install pip packages
       ansible.builtin.pip:
-        name:
-          - pykeepass
-          - ansible
+        requirements: requirements.txt
         state: present
 
     #- name: Install hczv.keepass ansible collection

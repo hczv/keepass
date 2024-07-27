@@ -34,7 +34,7 @@ provisioner:
   name: ansible
   #log: true
 scenario:
-  name: default
+  name: test2
   test_sequence:
     - create
     - prepare

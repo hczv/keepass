@@ -14,7 +14,7 @@ homepage: https://github.com/hczv/ansible-keepass
 issues: https://github.com/hczv/ansible-keepass/issues
 build_ignore: [
     'ansible.cfg',
-    'collections',
+    'ansible_collections',
     '.devcontainer',
     '.*',
     'requirements.*'

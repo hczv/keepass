@@ -2,7 +2,8 @@
     "name": "Ansible Container",
     "dockerFile": "Dockerfile",
     "mounts": [
-        "source=${localWorkspaceFolder}/.devcontainer/userconfig,target=/userconfig,type=bind"
+        "source=${localWorkspaceFolder}/.devcontainer/userconfig,target=/userconfig,type=bind",
+        "source=hczv-keepass-docker-volume,target=/var/lib/docker,type=volume"
     ],
     "remoteUser": "vscode",
     "postCreateCommand": "python3 -m pip install --user -r ${containerWorkspaceFolder}/requirements.txt",
