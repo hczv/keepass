@@ -32,7 +32,8 @@
                 "numso.prettier-standard-vscode",
                 "EditorConfig.EditorConfig",
                 "adamhartford.vscode-base64",
-                "nhoizey.gremlins"
+                "nhoizey.gremlins",
+                "github.copilot"
             ]
         }
     }

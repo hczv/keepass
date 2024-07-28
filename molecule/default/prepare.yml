@@ -17,7 +17,3 @@
           - ansible
         state: present
 
-    #- name: Install hczv.keepass ansible collection
-    #  community.general.ansible_galaxy_install:
-    #    name: hczv.keepass
-    #    type: collection

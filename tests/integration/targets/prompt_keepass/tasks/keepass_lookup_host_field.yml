@@ -1,0 +1,56 @@
+- name: Keepass lookup specific host entry username
+  ansible.builtin.assert:
+    that:
+      - lookup('hczv.keepass.lookup', 'username', '{{ item }}') == 'my_host_user'
+    fail_msg: 'The value from the lookup does not match the expected value'
+  loop:
+    - host.subdomain.domain.tld
+    - host2.subdomain.domain.tld
+    - host3.subdomain.domain.tld
+
+- name: Keepass lookup specific host entry password
+  ansible.builtin.assert:
+    that:
+      - lookup('hczv.keepass.lookup', 'password', '{{ item }}') == 'my_host_password'
+    fail_msg: 'The value from the lookup does not match the expected value'
+  loop:
+    - host.subdomain.domain.tld
+    - host2.subdomain.domain.tld
+    - host3.subdomain.domain.tld
+
+- name: Keepass lookup specific host entry username based on inventory_hostname
+  ansible.builtin.assert:
+    that:
+      - lookup('hczv.keepass.lookup', 'username') == 'my_host_user'
+    fail_msg: 'The value from the lookup does not match the expected value'
+  loop:
+    - host.subdomain.domain.tld
+    - host2.subdomain.domain.tld
+    - host3.subdomain.domain.tld
+  loop_control :
+    loop_var: inventory_hostname
+
+- name: Keepass lookup specific host entry password based on inventory_hostname
+  ansible.builtin.assert:
+    that:
+      - lookup('hczv.keepass.lookup', 'password') == 'my_host_password'
+    fail_msg: 'The value from the lookup does not match the expected value'
+  loop:
+    - host.subdomain.domain.tld
+    - host2.subdomain.domain.tld
+    - host3.subdomain.domain.tld
+  loop_control :
+    loop_var: inventory_hostname
+
+- block:
+    - name: Expect to fail with duplicate hosts
+      set_fact:
+        lookup_result: "{{ lookup('hczv.keepass.lookup', 'username', 'my_duplicated_host.subdomain.domain.tld') }}"
+      ignore_errors: true
+
+  rescue:
+    - name: Handle the expected error
+      debug:
+        msg: "Lookup failed as expected with invalid arguments."
+
+
