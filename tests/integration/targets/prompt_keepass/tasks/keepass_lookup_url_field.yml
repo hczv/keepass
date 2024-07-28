@@ -1,36 +1,40 @@
-- name: Verify keepass.kdbx file exists
-  ansible.builtin.stat:
-    path: "{{ keepass_dbx }}"
-  register: keepass_dbx_stat
-
-#- name: Debug keepass.kdbx file stats
-#  ansible.builtin.debug:
-#    var: keepass_dbx_stat
-
-- name: Fail if keepass.kdbx file does not exist
-  ansible.builtin.fail:
-    msg: "The keepass.kdbx file does not exist at {{ keepass_dbx }}"
-  when: not keepass_dbx_stat.stat.exists
-
-- name: Keepass lookup specific host entry
+- name: Keepass lookup specific url entry username
   ansible.builtin.assert:
     that:
-      - lookup('hczv.keepass.lookup', 'username', 'host.subdomain.domain.tld') == 'my_host_user'
-    fail_msg: "The value from the lookup does not match the expected value"
+      - lookup('hczv.keepass.lookup', 'username', 'host_url.subdomain.domain.tld') == 'my_url_user'
+    fail_msg: 'The value from the lookup does not match the expected value'
 
-- name: Keepass lookup specific host entry that does not exist, but matches domain
+- name: Keepass lookup specific url entry password
   ansible.builtin.assert:
     that:
-      - lookup('hczv.keepass.lookup', 'username', 'host_no_exist.subdomain.domain.tld') == 'my_domain_user'
-    fail_msg: "The value from the lookup does not match the expected value"
+      - lookup('hczv.keepass.lookup', 'password', 'host_url.subdomain.domain.tld') == 'my_url_password'
+    fail_msg: 'The value from the lookup does not match the expected value'
 
-- name: Set inventory_hostname to the host.subdomain.domain.tld
-  ansible.builtin.set_fact:
-    inventory_hostname: "host.subdomain.domain.tld"
 
-- name: Assert the value from the lookup
+- name: Keepass lookup specific url entry username based on inventory_hostname
+  vars:
+    inventory_hostname: host_url.subdomain.domain.tld
   ansible.builtin.assert:
     that:
-      - lookup('hczv.keepass.lookup', 'username') == 'my_host_user'
-    fail_msg: "The value from the lookup does not match the expected value"
+      - lookup('hczv.keepass.lookup', 'username') == 'my_url_user'
+    fail_msg: 'The value from the lookup does not match the expected value'
+
+- name: Keepass lookup specific url entry password based on inventory_hostname
+  vars:
+    inventory_hostname: host_url.subdomain.domain.tld
+  ansible.builtin.assert:
+    that:
+      - lookup('hczv.keepass.lookup', 'password') == 'my_url_password'
+    fail_msg: 'The value from the lookup does not match the expected value'
+
+- block:
+    - name: Expect to fail with duplicate hosts
+      set_fact:
+        lookup_result: "{{ lookup('hczv.keepass.lookup', 'username', 'my_duplicated_host_url.subdomain.domain.tld') }}"
+      ignore_errors: true
+  rescue:
+    - name: Handle the expected error
+      debug:
+        msg: "Lookup failed as expected with invalid arguments."
+
 

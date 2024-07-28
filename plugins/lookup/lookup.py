@@ -18,33 +18,19 @@ from ansible.plugins.lookup import LookupBase
 from tkinter import *
 from tkinter.ttk import *
 from pykeepass import PyKeePass
-from pykeepass.exceptions import CredentialsError
 from ansible.utils.display import Display
 import re
 
 display = Display()
 
-def find_entries_with_field(kp, field_name, field_value):
-    # List to hold the entries that match the criteria
-    matching_entries = []
-
-    # Iterate through all entries in the KeePass database
-    for entry in kp.entries:
-        # Check if the entry has the specific field and if its value matches
-        if field_name in entry.custom_properties and field_value in entry.custom_properties[field_name]:
-            # Handle multiple lines in the field
-            for entryVal in entry.custom_properties[field_name].split():
-                if entryVal == field_value:
-                    matching_entries.append(entry)
-
-    return matching_entries
-
-
 def find_entry_with_field(self, field_name, field_value, display):
     matching_entries = []
 
     for entry in self.kp.entries:
-        if field_name in entry.custom_properties and field_value in entry.custom_properties[field_name]:
+        if field_name == "url":
+            if entry.url == field_value and (entry.url.startswith("ssh://") or not entry.url.find("://") != -1):
+                matching_entries.append(entry)
+        elif field_name in entry.custom_properties and field_value in entry.custom_properties[field_name]:
             for entryVal in entry.custom_properties[field_name].split():
                 if entryVal == field_value:
                     matching_entries.append(entry)
@@ -66,7 +52,7 @@ class LookupModule(LookupBase):
 
     # Require username or password term in the lookup
     if terms[0] != "username" and terms[0] != "password":
-        raise AnsibleError("KeePass: term username or password is required.")
+        raise AnsibleError("KeePass term username or password is required.")
 
     runtype = terms[0]
 
@@ -76,15 +62,17 @@ class LookupModule(LookupBase):
     # Check if there is a second value, and it's actually has someting, assumts it's a new hostname to pull credentials for.
     if len(terms) == 2 and terms[1]:
         host = terms[1]
-        display.v("Keepass Host overwritten to: " + host)
+        display.v("KeePass Host overwritten to: " + host)
 
 
     cache_identifier = host + "|" + runtype
     cached_data = self._get_cached_data(variables, cache_identifier)
 
     if cached_data is not None:
-        display.debug("Using cached %s entry for %s" % (runtype, host))
+        display.v("Using cached %s entry for %s" % (runtype, host))
         return [cached_data]
+    #else:
+    #    display.v("No cached %s entry for %s" % (runtype, host))
 
     # Path to your KeePass database file
     kdbx_file = vars['keepass_dbx']
@@ -99,8 +87,9 @@ class LookupModule(LookupBase):
 
     domain = re.sub(r'^[^.]+\.', '', host)
 
-
-    result = find_entry_with_field(self, host_field, host, display)
+    result = find_entry_with_field(self, "url", host, display)
+    if result is None:
+        result = find_entry_with_field(self, host_field, host, display)
     if result is None:
         result = find_entry_with_field(self, domain_field, domain, display)
 
