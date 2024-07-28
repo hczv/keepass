@@ -35,6 +35,7 @@
     - keepass_lookup_host_field.yml
     - keepass_lookup_domain_field.yml
     - keepass_lookup_url_field.yml
+    - keepass_lookup_logic_handeling.yml
 
 
 

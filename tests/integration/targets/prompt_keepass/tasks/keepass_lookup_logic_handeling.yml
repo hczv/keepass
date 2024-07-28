@@ -1,36 +1,51 @@
-- name: Verify keepass.kdbx file exists
-  ansible.builtin.stat:
-    path: "{{ keepass_dbx }}"
-  register: keepass_dbx_stat
+- name: Host entry empty username
+  ansible.builtin.debug:
+    msg: "lookup var: {{ lookup('hczv.keepass.lookup', 'username', 'host_empty_username.subdomain.domain.tld') }} "
 
-#- name: Debug keepass.kdbx file stats
-#  ansible.builtin.debug:
-#    var: keepass_dbx_stat
+- name: Host entry password
+  ansible.builtin.debug:
+    msg: "lookup var: {{ lookup('hczv.keepass.lookup', 'password', 'host_empty_username.subdomain.domain.tld') }} "
 
-- name: Fail if keepass.kdbx file does not exist
+
+- name: Host entry expect empty username
+  set_fact:
+    host_empty_username: "{{ lookup('hczv.keepass.lookup', 'username', 'host_empty_username.subdomain.domain.tld') }}"
+
+- name: Fail if username entry has text
   ansible.builtin.fail:
-    msg: "The keepass.kdbx file does not exist at {{ keepass_dbx }}"
-  when: not keepass_dbx_stat.stat.exists
+    msg: "The username entry has data {{host_empty_username}}"
+  when: not host_empty_username == ""
 
-- name: Keepass lookup specific host entry
+- name: Host entry expect password
   ansible.builtin.assert:
     that:
-      - lookup('hczv.keepass.lookup', 'username', 'host.subdomain.domain.tld') == 'my_host_user'
-    fail_msg: "The value from the lookup does not match the expected value"
+      - lookup('hczv.keepass.lookup', 'password', 'host_empty_username.subdomain.domain.tld') == 'my_host_password'
+    fail_msg: 'The value from the lookup does not match the expected value'
 
-- name: Keepass lookup specific host entry that does not exist, but matches domain
+
+- name: Host entry expect empty password
+  set_fact:
+    host_entry_empty_password: "{{ lookup('hczv.keepass.lookup', 'password', 'host_empty_password.subdomain.domain.tld') }}"
+
+- name: Fail if password entry has text
+  ansible.builtin.fail:
+    msg: "The password entry has data {{host_entry_empty_password}}"
+  when: not host_entry_empty_password == ""
+
+- name: Host entry expect username
   ansible.builtin.assert:
     that:
-      - lookup('hczv.keepass.lookup', 'username', 'host_no_exist.subdomain.domain.tld') == 'my_domain_user'
-    fail_msg: "The value from the lookup does not match the expected value"
+      - lookup('hczv.keepass.lookup', 'username', 'host_empty_password.subdomain.domain.tld') == 'my_host_user'
+    fail_msg: 'The value from the lookup does not match the expected value'
 
-- name: Set inventory_hostname to the host.subdomain.domain.tld
-  ansible.builtin.set_fact:
-    inventory_hostname: "host.subdomain.domain.tld"
 
-- name: Assert the value from the lookup
+#- name: reference entry password
+#  ansible.builtin.debug:
+#    msg: "lookup var: {{ lookup('hczv.keepass.lookup', 'username', 'host_reference.subdomain.domain.tld') }} "
+
+- name: Follow usernamd and password references
   ansible.builtin.assert:
     that:
-      - lookup('hczv.keepass.lookup', 'username') == 'my_host_user'
-    fail_msg: "The value from the lookup does not match the expected value"
-
+      - lookup('hczv.keepass.lookup', 'username', 'host_reference.subdomain.domain.tld') == 'my_host_user'
+      - lookup('hczv.keepass.lookup', 'password', 'host_reference.subdomain.domain.tld') == 'my_host_password'
+    fail_msg: 'The value from the lookup does not match the expected value'

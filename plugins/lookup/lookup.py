@@ -45,6 +45,31 @@ def find_entry_with_field(self, field_name, field_value, display):
 
     return None
 
+def resolve_reference(kp, reference):
+    # Parse the reference
+    match = re.match(r'\{REF:([A-Z])@I:([0-9A-F]+)\}', reference)
+    if not match:
+        raise ValueError("Invalid reference format")
+
+    field, uuid = match.groups()
+
+    # Convert the UUID to the expected format (hyphenated)
+    uuid = '-'.join([uuid[:8], uuid[8:12], uuid[12:16], uuid[16:20], uuid[20:]])
+
+    # Find the entry by UUID
+    ref_entry = kp.find_entries(uuid, first=True)
+    if not ref_entry:
+        raise ValueError("Referenced entry not found")
+
+    # Retrieve the corresponding field
+    if field == 'U':
+        return ref_entry.username
+    elif field == 'P':
+        return ref_entry.password
+    else:
+        raise ValueError("Unknown field type")
+
+
 class LookupModule(LookupBase):
   kp = None
 
@@ -87,28 +112,41 @@ class LookupModule(LookupBase):
 
     domain = re.sub(r'^[^.]+\.', '', host)
 
-    result = find_entry_with_field(self, "url", host, display)
-    if result is None:
-        result = find_entry_with_field(self, host_field, host, display)
-    if result is None:
-        result = find_entry_with_field(self, domain_field, domain, display)
+    entry = find_entry_with_field(self, "url", host, display)
+    if entry is None:
+        entry = find_entry_with_field(self, host_field, host, display)
+    if entry is None:
+        entry = find_entry_with_field(self, domain_field, domain, display)
 
-    if result is None:
+    if entry is None:
         raise AnsibleError("KeePass: Could not locate credentials for %s" % host)
 
     # Set cache
-    self._set_cached_data(variables, cache_identifier, self._get_result_property(runtype, result))
-    return [self._get_result_property(runtype, result)]
+    display.vvv("Using keepass entry %s for %s" % (entry.path, host))
+    result = self._get_result_value(entry, runtype)
+
+    self._set_cached_data(variables, cache_identifier, result)
+    return [result]
 
 
-  def _get_result_property(self, runtype, result):
+  def _get_result_value(self, entry, runtype):
+        result = None
         if runtype == "username":
-            return result.username
+            result = entry.username
         elif runtype == "password":
-            return result.password
+            result = entry.password
+
+        if result is None or result == "":
+            display.error("KeePass entry %s has empty %s field" % (entry.path, runtype))
+            #raise AnsibleError("KeePass entry %s has empty %s field" % (entry.path, runtype))
+        elif result.startswith("{REF:"):
+            result = resolve_reference(self.kp, result)
+
+        return result
 
   def _get_cached_data(self, variables, key):
       return variables.get(key)
 
   def _set_cached_data(self, variables, key, value):
       variables[key] = value
+
