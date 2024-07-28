@@ -1,0 +1,41 @@
+- name: Verify keepass.kdbx file exists
+  ansible.builtin.stat:
+    path: "{{ keepass_dbx }}"
+  register: keepass_dbx_stat
+
+#- name: Debug keepass.kdbx file stats
+#  ansible.builtin.debug:
+#    var: keepass_dbx_stat
+
+- name: Fail if keepass.kdbx file does not exist
+  ansible.builtin.fail:
+    msg: "The keepass.kdbx file does not exist at {{ keepass_dbx }}"
+  when: not keepass_dbx_stat.stat.exists
+
+- name: Keepass lookup specific host entry
+  ansible.builtin.debug:
+    msg: "{{ lookup('hczv.keepass.lookup', 'username', 'host.subdomain.domain.tld') }}"
+  when: keepass_dbx_stat.stat.exists
+
+- name: Keepass lookup specific host entry that does not exist, but matches domain
+  ansible.builtin.assert:
+    that:
+      - lookup('hczv.keepass.lookup', 'username', 'host_no_exist.subdomain.domain.tld') == 'my_domain_user'
+    fail_msg: "The value from the lookup does not match the expected value"
+  when: keepass_dbx_stat.stat.exists
+
+- name: Set inventory_hostname to the host.subdomain.domain.tld
+  ansible.builtin.set_fact:
+    inventory_hostname: "host.subdomain.domain.tld"
+
+#- name: Use custom lookup plugin
+#  ansible.builtin.debug:
+#    msg: "{{ lookup('hczv.keepass.lookup', 'username') }}"
+#  when: keepass_dbx_stat.stat.exists
+
+- name: Assert the value from the lookup
+  ansible.builtin.assert:
+    that:
+      - lookup('hczv.keepass.lookup', 'username') == 'my_host_user'
+    fail_msg: "The value from the lookup does not match the expected value"
+  when: keepass_dbx_stat.stat.exists

@@ -1,18 +1,24 @@
-# tests/integration/test_vars_plugin.yml
-- name: Test my vars plugin
-  hosts: localhost
-  gather_facts: false
-  vars_files:
-    - ../vars/test_vars.yml
-  tasks:
-    - name: Print variables from my vars plugin
-      debug:
-        var: keepass_psw
 
-    - name: Print variables from my vars plugin
-      debug:
-        var: my_custom_var
+- name: Lookup in keepass kdbx v2.x
+  include_tasks: keepass_lookup.yml
+  vars:
+    keepass_dbx: "./targets/prompt_keepass/files/keepass-v2.x.kdbx"
+    keepass_psw: 'test_password'
 
-    - name: Print variables from my vars plugin
-      debug:
-        var: test_var
+- name: Lookup in keepass kdbx v2.34
+  include_tasks: keepass_lookup.yml
+  vars:
+    keepass_dbx: "./targets/prompt_keepass/files/keepass-v2.34.kdbx"
+    keepass_psw: 'test_password'
+
+- name: Lookup in keepass kdbx v4
+  include_tasks: keepass_lookup.yml
+  vars:
+    keepass_dbx: "./targets/prompt_keepass/files/keepass-v4.kdbx"
+    keepass_psw: 'test_password'
+
+
+
+
+
+

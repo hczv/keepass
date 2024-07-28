@@ -164,6 +164,8 @@ logs
 .vscode
 
 ansible_collections
+collections
+
 
 # User config
 .devcontainer/userconfig/*

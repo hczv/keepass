@@ -17,5 +17,6 @@ build_ignore: [
     'ansible_collections',
     '.devcontainer',
     '.*',
-    'requirements.*'
+    'requirements.*',
+    '*.sh'
 ]
