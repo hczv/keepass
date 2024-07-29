@@ -9,15 +9,17 @@ import tkinter as tk
 from tkinter import simpledialog
 import os
 
-DOCUMENTATION = '''
-    vars: keepass_psw
-    version_added: "1.0"
-    short_description: Retrieved keepass master password
+DOCUMENTATION = """
+    name: prompt_keepass_psw
+    short_description: Retrieves keepass master password
     description:
         - Creates a popup gui window requesting keepass master password
         - Vars plugins gets executed all the time, each host and each group and probably more
           This plugins remembers the first entry, and returns the first result for each call.
-'''
+        - To enable the plugin you need to add the following to your ansible.cfg
+          [defaults]
+          vars_plugins_enabled = host_group_vars,hczv.keepass.prompt_keepass_psw
+"""
 
 class PasswordPopup(simpledialog.Dialog):
     def body(self, master):
@@ -60,8 +62,6 @@ display = Display()
 
 class VarsModule(BaseVarsPlugin):
     _cache = {}
-
-    REQUIRES_ENABLED = False
 
     """
     Loads variables for groups and/or hosts

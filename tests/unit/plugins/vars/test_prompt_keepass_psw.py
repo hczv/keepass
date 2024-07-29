@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 import os
-from plugins.vars.keepass_psw import VarsModule, ask_password, Display, PasswordPopup
+from plugins.vars.prompt_keepass_psw import VarsModule, ask_password, Display, PasswordPopup
 
 class TestVarsModule(unittest.TestCase):
 

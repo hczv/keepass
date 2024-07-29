@@ -2,15 +2,24 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 DOCUMENTATION = r"""
-  name: file
-  author: fwi
-  version_added: "0.2"
-  short_description: Asks for keepass password and caches result for execution session
-  description:
-      - This lookup returns either a username or password retrieved from a keepass kdbx file
+lookup: keepass
+description:
+    - This plugin allows you to lookup KeePass entries by username or password
+    - The plugin will search for entries by url and two custom fields host-field and domain-field
+    - Order of search is url, host-field, domain-field, and the first match is returned
+options:
+    _terms:
+        description: The terms to lookup, either 'username' or 'password'.
+        required: True
+    host:
+        description: The hostname to pull credentials for.
+        required: False
+        default: inventory_hostname
   examples:
-    - "{{ lookup('keepass', 'username') }}"
-    - "{{ lookup('keepass', 'password') }}"
+    - "{{ lookup('hczv.keepass.lookup', 'username') }}"
+    - "{{ lookup('hczv.keepass.lookup', 'password') }}"
+    - "{{ lookup('hczv.keepass.lookup', 'username', 'my-host.example.tld') }}"
+    - "{{ lookup('hczv.keepass.lookup', 'password', 'my-host.example.tld') }}"
 """
 
 from ansible.errors import AnsibleError
