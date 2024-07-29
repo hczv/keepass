@@ -165,7 +165,7 @@ logs
 
 ansible_collections
 collections
-
+*.tar.gz
 
 # User config
 .devcontainer/userconfig/*
