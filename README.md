@@ -10,6 +10,17 @@ The lookup plugin uses the `keepass_psw` and other variables to search through t
 
 ### Precedence
 
+The lookup plugin follows a specific order of precedence when searching for matches:
+
+1. URL Field: If a host matches the URL field of an entry, it will be considered a match.
+
+2. Host Field: If a host does not match the URL field but matches the host field of an entry, it will be considered a match.
+
+3. Domain Field: If neither the URL field nor the host field matches, a search will be performed based on the domain field.
+
+If no match is found using any of the above criteria, an error will be returned.
+
+
 ## Installation
 
 Requirements: python3, pykeepass 4.1.0
