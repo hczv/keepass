@@ -1,0 +1,48 @@
+
+
+#- name: Verify keepass.kdbx file exists
+#  ansible.builtin.stat:
+#    path: "./targets/prompt_keepass/files/keepass-v4.kdbx"
+#  register: keepass_dbx_stat
+#- name: Fail if keepass.kdbx file does not exist
+#  ansible.builtin.fail:
+#    msg: "The keepass.kdbx file does not exist at ./targets/prompt_keepass/files/keepass-v4.kdbx"
+#  when: not keepass_dbx_stat.stat.exists
+
+#- name: Lookup in keepass kdbx v2.x
+#  include_tasks: "{{ item }}"
+#  vars:
+#    keepass_dbx: "./targets/prompt_keepass/files/keepass-v2.x.kdbx"
+#    keepass_psw: 'test_password'
+#  loop:
+#    - keepass_lookup_host_field.yml
+#    - keepass_lookup_domain_field.yml
+#    - keepass_lookup_url_field.yml
+#    - keepass_lookup_logic_handeling.yml
+#- name: Lookup in keepass kdbx v2.34
+#  include_tasks: "{{ item }}"
+#  vars:
+#    keepass_dbx: "./targets/prompt_keepass/files/keepass-v2.34.kdbx"
+#    keepass_psw: 'test_password'
+#  loop:
+#    - keepass_lookup_host_field.yml
+#    - keepass_lookup_domain_field.yml
+#    - keepass_lookup_url_field.yml
+#    - keepass_lookup_logic_handeling.yml
+
+- name: Lookup in keepass kdbx v4
+  include_tasks: "{{ item }}"
+  vars:
+    keepass_dbx: "./targets/prompt_keepass/files/keepass-v4.kdbx"
+    keepass_psw: 'test_password'
+  loop:
+    - keepass_lookup_host_field.yml
+    - keepass_lookup_domain_field.yml
+    - keepass_lookup_url_field.yml
+    - keepass_lookup_logic_handeling.yml
+
+
+
+
+
+

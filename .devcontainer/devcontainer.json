@@ -1,0 +1,41 @@
+{
+    "name": "Ansible Container",
+    "dockerFile": "Dockerfile",
+    "mounts": [
+        "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+        "source=${localWorkspaceFolder}/.devcontainer/userconfig,target=/userconfig,type=bind",
+        "source=hczv-keepass-docker-volume,target=/var/lib/docker,type=volume"
+    ],
+    "remoteUser": "vscode",
+    "postCreateCommand": "python3 -m pip install --user -r ${containerWorkspaceFolder}/requirements.txt",
+    "containerEnv": {
+        "ANSIBLE_CONFIG": "${containerWorkspaceFolder}/ansible.cfg"
+    },
+    "runArgs": [
+        "--privileged"
+    ],
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash",
+                "diffEditor.renderSideBySide": true,
+                "editor.suggestSelection": "first",
+                "editor.tabSize": 4,
+                "editor.wordWrap": "bounded",
+                "editor.wordWrapColumn": 200,
+                "explorer.confirmDelete": false,
+                "explorer.confirmDragAndDrop": false
+            },
+            "extensions": [
+                "redhat.ansible",
+                "redhat.vscode-yaml",
+                "ms-azuretools.vscode-docker",
+                "numso.prettier-standard-vscode",
+                "EditorConfig.EditorConfig",
+                "adamhartford.vscode-base64",
+                "nhoizey.gremlins",
+                "github.copilot"
+            ]
+        }
+    }
+}

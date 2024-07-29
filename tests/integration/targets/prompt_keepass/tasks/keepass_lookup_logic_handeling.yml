@@ -1,0 +1,51 @@
+- name: Host entry empty username
+  ansible.builtin.debug:
+    msg: "lookup var: {{ lookup('hczv.keepass.lookup', 'username', 'host_empty_username.subdomain.domain.tld') }} "
+
+- name: Host entry password
+  ansible.builtin.debug:
+    msg: "lookup var: {{ lookup('hczv.keepass.lookup', 'password', 'host_empty_username.subdomain.domain.tld') }} "
+
+
+- name: Host entry expect empty username
+  set_fact:
+    host_empty_username: "{{ lookup('hczv.keepass.lookup', 'username', 'host_empty_username.subdomain.domain.tld') }}"
+
+- name: Fail if username entry has text
+  ansible.builtin.fail:
+    msg: "The username entry has data {{host_empty_username}}"
+  when: not host_empty_username == ""
+
+- name: Host entry expect password
+  ansible.builtin.assert:
+    that:
+      - lookup('hczv.keepass.lookup', 'password', 'host_empty_username.subdomain.domain.tld') == 'my_host_password'
+    fail_msg: 'The value from the lookup does not match the expected value'
+
+
+- name: Host entry expect empty password
+  set_fact:
+    host_entry_empty_password: "{{ lookup('hczv.keepass.lookup', 'password', 'host_empty_password.subdomain.domain.tld') }}"
+
+- name: Fail if password entry has text
+  ansible.builtin.fail:
+    msg: "The password entry has data {{host_entry_empty_password}}"
+  when: not host_entry_empty_password == ""
+
+- name: Host entry expect username
+  ansible.builtin.assert:
+    that:
+      - lookup('hczv.keepass.lookup', 'username', 'host_empty_password.subdomain.domain.tld') == 'my_host_user'
+    fail_msg: 'The value from the lookup does not match the expected value'
+
+
+#- name: reference entry password
+#  ansible.builtin.debug:
+#    msg: "lookup var: {{ lookup('hczv.keepass.lookup', 'username', 'host_reference.subdomain.domain.tld') }} "
+
+- name: Follow usernamd and password references
+  ansible.builtin.assert:
+    that:
+      - lookup('hczv.keepass.lookup', 'username', 'host_reference.subdomain.domain.tld') == 'my_host_user'
+      - lookup('hczv.keepass.lookup', 'password', 'host_reference.subdomain.domain.tld') == 'my_host_password'
+    fail_msg: 'The value from the lookup does not match the expected value'
