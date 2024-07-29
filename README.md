@@ -68,8 +68,8 @@ With an Ansible inventory where the hostname is defined as follows:
 all:
     hosts:
         host.subdomain.domain.tld:
-            ansible_user: "{{ lookup('keepass', 'username') }}"
-            ansible_password: "{{ lookup('keepass', 'password') }}"
+            ansible_user: "{{ lookup('hczv.keepass.lookup', 'username') }}"
+            ansible_password: "{{ lookup('hczv.keepass.lookup', 'password') }}"
 ```
 
 You can set the lookup without any arguments, as it will default to the `inventory_hostname` for the lookup. If other credentials are needed, this logic can lookup based on a specific host instead:
@@ -78,8 +78,8 @@ You can set the lookup without any arguments, as it will default to the `invento
 all:
     hosts:
         host.subdomain.domain.tld:
-            ansible_user: "{{ lookup('keepass', 'username', 'my-other-host.subdomain.domain.tld') }}"
-            ansible_password: "{{ lookup('keepass', 'password', 'my-other-host.subdomain.domain.tld') }}"
+            ansible_user: "{{ lookup('hczv.keepass.lookup', 'username', 'my-other-host.subdomain.domain.tld') }}"
+            ansible_password: "{{ lookup('hczv.keepass.lookup', 'password', 'my-other-host.subdomain.domain.tld') }}"
 ```
 
 ### Domain Lookup
@@ -94,11 +94,11 @@ and will match on all hosts within the domains. For example:
 all:
     hosts:
         host1.subdomain.domain.tld:
-            ansible_user: "{{ lookup('keepass', 'username') }}"
-            ansible_password: "{{ lookup('keepass', 'password') }}"
+            ansible_user: "{{ lookup('hczv.keepass.lookup', 'username') }}"
+            ansible_password: "{{ lookup('hczv.keepass.lookup', 'password') }}"
         host2.subdomain.domain.tld:
-            ansible_user: "{{ lookup('keepass', 'username') }}"
-            ansible_password: "{{ lookup('keepass', 'password') }}"
+            ansible_user: "{{ lookup('hczv.keepass.lookup', 'username') }}"
+            ansible_password: "{{ lookup('hczv.keepass.lookup', 'password') }}"
 ```
 
 and so on.
