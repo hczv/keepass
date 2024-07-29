@@ -30,14 +30,14 @@ RUN wget https://github.com/junegunn/fzf/releases/download/v0.54.0/fzf-0.54.0-li
     rm -f /tmp/fzf-0.54.0-linux_amd64.tar.gz
 
 # Install docker-ce cli
-#RUN dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo && \
-#    dnf install -y docker-ce-cli && \
+RUN dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo && \
+    dnf install -y docker-ce-cli
 #    usermod -aG docker $USERNAME
 
-RUN dnf install -y yum-utils device-mapper-persistent-data lvm2 && \
-    dnf  config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
-    dnf install -y docker-ce docker-ce-cli containerd.io && \
-    usermod -aG docker $USERNAME
+#RUN dnf install -y yum-utils device-mapper-persistent-data lvm2 && \
+#    dnf  config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
+#    dnf install -y docker-ce docker-ce-cli containerd.io && \
+#    usermod -aG docker $USERNAME
 
 # Set workdir to vscode home
 WORKDIR /home/${USERNAME}

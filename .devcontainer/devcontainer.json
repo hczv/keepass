@@ -2,6 +2,7 @@
     "name": "Ansible Container",
     "dockerFile": "Dockerfile",
     "mounts": [
+        "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
         "source=${localWorkspaceFolder}/.devcontainer/userconfig,target=/userconfig,type=bind",
         "source=hczv-keepass-docker-volume,target=/var/lib/docker,type=volume"
     ],
