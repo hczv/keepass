@@ -11,14 +11,12 @@ import os
 
 DOCUMENTATION = """
     name: prompt_keepass_psw
-    short_description: Retrieves keepass master password
+    short_description: Requests keepass master password
     description:
         - Creates a popup gui window requesting keepass master password
         - Vars plugins gets executed all the time, each host and each group and probably more
           This plugins remembers the first entry, and returns the first result for each call.
-        - To enable the plugin you need to add the following to your ansible.cfg
-          [defaults]
-          vars_plugins_enabled = host_group_vars,hczv.keepass.prompt_keepass_psw
+        - To enable this plugin, add it to vars_plugins_enabled in ansible.cfg
 """
 
 class PasswordPopup(simpledialog.Dialog):
