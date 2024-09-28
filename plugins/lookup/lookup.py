@@ -94,11 +94,14 @@ class LookupModule(LookupBase):
     vars = getattr(self._templar, '_available_variables', {})
     host = vars['inventory_hostname']
 
+    if host == "localhost" or host == "127.0.0.1":
+        display.v("Host was detected to be: " + host + " Skipping!")
+        return [""]
+
     # Check if there is a second value, and it's actually has someting, assumts it's a new hostname to pull credentials for.
     if len(terms) == 2 and terms[1]:
         host = terms[1]
         display.v("KeePass Host overwritten to: " + host)
-
 
     cache_identifier = host + "|" + runtype
     cached_data = self._get_cached_data(variables, cache_identifier)

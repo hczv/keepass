@@ -11,14 +11,12 @@ import os
 
 DOCUMENTATION = """
     name: prompt_keepass_psw
-    short_description: Retrieves keepass master password
+    short_description: Requests keepass master password
     description:
         - Creates a popup gui window requesting keepass master password
         - Vars plugins gets executed all the time, each host and each group and probably more
           This plugins remembers the first entry, and returns the first result for each call.
-        - To enable the plugin you need to add the following to your ansible.cfg
-          [defaults]
-          vars_plugins_enabled = host_group_vars,hczv.keepass.prompt_keepass_psw
+        - To enable this plugin, add it to vars_plugins_enabled in ansible.cfg
 """
 
 class PasswordPopup(simpledialog.Dialog):
@@ -49,15 +47,6 @@ class PasswordPopup(simpledialog.Dialog):
         self.password_entry.icursor('end')
         return 'break'
 
-def ask_password():
-    root = tk.Tk()
-    root.withdraw()
-    dialog = PasswordPopup(root)
-    password = dialog.result
-    root.destroy()
-    return password
-
-
 display = Display()
 
 class VarsModule(BaseVarsPlugin):
@@ -67,7 +56,12 @@ class VarsModule(BaseVarsPlugin):
     Loads variables for groups and/or hosts
     """
 
-    def get_vars(self, loader, path, entities, cache=True):
+    def get_vars(self, loader, path, entities, tk = tk.Tk()):
+
+        if os.getenv('SKIP_KEEPASS_PROMPT'):
+            # Skip loading this plugin
+            return {}
+
         cache_key = 'cached_var'
 
         cached_data = self._get_cached_data(cache_key)
@@ -77,9 +71,11 @@ class VarsModule(BaseVarsPlugin):
             return cached_data
 
         display.v("Requesting master password")
-        data = self._generate_data()
+        data = self._generate_data(tk)
 
         self._set_cached_data(cache_key, data)
+
+        tk.destroy()
 
         return data
 
@@ -89,12 +85,12 @@ class VarsModule(BaseVarsPlugin):
     def _set_cached_data(self, key, value):
         self._cache[key] = value
 
-    def _generate_data(self):
-        if os.getenv('MOLECULE_SCENARIO'):
-            return { 'keepass_psw': 'MOLECULE_SCENARIO' }
+    def _generate_data(self, tk):
+        tk.withdraw()
+        dialog = PasswordPopup(tk)
 
         data = {
-            'keepass_psw': ask_password()
+            'keepass_psw': f"{dialog.result}"
         }
         return data
 

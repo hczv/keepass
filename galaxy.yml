@@ -1,6 +1,6 @@
 namespace: hczv
 name: keepass
-version: 1.0.0
+version: 1.0.1
 readme: README.md
 authors:
     - Filip Winthereig <hczv@hotmail.dk>
@@ -8,10 +8,10 @@ description: 'Allows for keepass lookups based on custom fields in keepass kdbx 
 license_file: 'LICENSE'
 tags: [hczv, keepass, module, plugin]
 dependencies: {}
-repository: https://github.com/hczv/ansible-keepass
-documentation: https://github.com/hczv/ansible-keepass/tree/main/docs
-homepage: https://github.com/hczv/ansible-keepass
-issues: https://github.com/hczv/ansible-keepass/issues
+repository: https://github.com/hczv/keepass
+documentation: https://github.com/hczv/keepass/tree/main/docs
+homepage: https://github.com/hczv/keepass
+issues: https://github.com/hczv/keepass/issues
 build_ignore: [
     'ansible.cfg',
     'ansible_collections',
