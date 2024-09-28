@@ -23,11 +23,14 @@ If no match is found using any of the above criteria, an error will be returned.
 
 ## Installation
 
-Requirements: python3, pykeepass 4.1.0
+Requirements: python3, pykeepass 4.1.0, python3-tkinter
 
 ```sh
 pip install --user 'pykeepass==4.1.0'
 ansible-galaxy collection install hczv.keepass
+
+dnf install python3-tkinter
+apt-get install python3-tk
 ```
 
 ## Ansible Variables
